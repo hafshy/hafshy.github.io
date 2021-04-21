@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <title>Tugas 3 IF3260</title>
+</head>
+<body>
+  <script type="text/javascript" src="js/webgl-utils.js"></script>
+  <script type="text/javascript" src="js/InitShaders.js"></script>
+  <script type="text/javascript" src="js/utils.js"></script>
+  <script type="text/javascript" src="js/MV.js"></script>
+  <script type="text/javascript" src="js/honolulu256.js"></script>
+  <script type="text/javascript" src="js/constant.js"></script>
+  <script type="text/javascript" src="js/inputListener.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <h1 class="title">👋 Articulated Object Model</h1>
+  <div class="container">
+    <canvas width="600" height="600" id="webgl-canvas">
+      Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    <div class="input-wrapper">
+      <select id="select" onchange="displayDiv(this)">
+        <option value="object1">Object 1</option>
+        <option value="object2">Object 2</option>
+        <option value="object3">Object 3</option>
+      </select>
+      <div class="input-section" id="file">
+        <div class="reset-button">
+          <button class="button button--winona button--border-thin button--round-s" name="save" id="save" onclick="saveData()">Save</button>
+        </div>
+        <div class="input-group">
+          <br><br>
+          <label for="inputfile">Read File: </label>
+          <input type="file" name="inputfile" id="inputfile" >
+        </div>
+      </div>
+      <div class="input-section" id="camera">
+        <div class="bg-1"> 
+          <div class="input-group">
+            <label for="rotateCamera">Rotate Camera: </label>
+            <input name="rotateCamera" id="rotateCamera" type="range" min="-360" max="360" value="1" step="1">
+            <p id="rotateCamera-value">1</p>
+          </div>
+          <div class="input-group">
+            <label for="cameraRadius">Camera Radius: </label>
+            <input name="cameraRadius" id="cameraRadius" type="range" min="0" max="10" value="1" step="0.1">
+            <p id="cameraRadius-value">1</p>
+          </div>
+        </div>
+      </div>
+      <div class="input-section" id="object1">
+        <div class="bg-2">
+          <div class="input-group">
+            <label for="torso">Torso: </label>
+            <input name="torso" id="torso" type="range" min="-360" max="360" value="0" step="1">
+            <p id="torso-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="head1">head 1: </label>
+            <input name="head1" id="head1" type="range" min="-360" max="360" value="0" step="1">
+            <p id="head1-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="head2">Head 2: </label>
+            <input name="head2" id="head2" type="range" min="-360" max="360" value="0" step="1">
+            <p id="head2-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="leftArm">Left Arm: </label>
+            <input name="leftArm" id="leftArm" type="range" min="-360" max="360" value="0" step="1">
+            <p id="leftArm-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="rightArm">Right Arm: </label>
+            <input name="rightArm" id="rightArm" type="range" min="-360" max="360" value="0" step="1">
+            <p id="rightArm-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="leftLeg">Left Leg: </label>
+            <input name="leftLeg" id="leftLeg" type="range" min="-360" max="360" value="180" step="1">
+            <p id="leftLeg-value">180</p>
+          </div>
+          <div class="input-group">
+            <label for="rightLeg">right Leg: </label>
+            <input name="rightLeg" id="rightLeg" type="range" min="-360" max="360" value="180" step="1">
+            <p id="rightLeg-value">180</p>
+          </div>
+        </div>
+        <div class="input-select">
+          <button class="button button--winona button--border-thin button--round-s" id="animation">Play</button>
+        </div> 
+        <div class="input-select">
+          <p>Bump Option: </p>
+          <button class="button button--winona button--border-thin button--round-s" id="Button2">Increase Theta</button>
+          <button class="button button--winona button--border-thin button--round-s"  id="Button3">Decrease Theta</button>
+          <button class="button button--winona button--border-thin button--round-s" id="Button4">Increase Phi</button>
+          <button class="button button--winona button--border-thin button--round-s" id="Button5">Decrease Phi</button>
+        </div>
+      </div>
+      <div class="input-section" id="object2">
+        <div class="bg-2">
+          <div class="input-group">
+            <label for="torso2">Torso: </label>
+            <input name="torso2" id="torso2" type="range" min="-360" max="360" value="0" step="1">
+            <p id="torso2-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="headInsect">head: </label>
+            <input name="headInsect" id="headInsect" type="range" min="0" max="180" value="0" step="1">
+            <p id="headInsect-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="leftFront">Left Front Arm: </label>
+            <input name="leftFront" id="leftFront" type="range" min="90" max="270" value="180" step="1">
+            <p id="leftFront-value">180</p>
+          </div>
+          <div class="input-group">
+            <label for="rightFront">Right Front Arm: </label>
+            <input name="rightFront" id="rightFront" type="range" min="90" max="270" value="180" step="1">
+            <p id="rightFront-value">180</p>
+          </div>
+          <div class="input-group">
+            <label for="leftBack">Left Back Arm: </label>
+            <input name="leftBack" id="leftBack" type="range" min="90" max="270" value="180" step="1">
+            <p id="leftBack-value">180</p>
+          </div>
+          <div class="input-group">
+            <label for="rightBack">Right Back Arm: </label>
+            <input name="rightBack" id="rightBack" type="range" min="90" max="270" value="180" step="1">
+            <p id="rightBack-value">180</p>
+          </div>
+          <div class="input-group">
+            <label for="tail">Tail: </label>
+            <input name="tail" id="tail" type="range" min="-90" max="90" value="0" step="1">
+            <p id="tail-value">0</p>
+          </div>
+          <div class="input-group">
+            <label for="moveObject2">Play Object: </label>
+            <button class="button button--winona button--border-thin button--round-s" id="moveObject2">Play</button>
+            <button class="button button--winona button--border-thin button--round-s" id="stopMove2">Pause</button>
+          </div>
+        </div>
+        
+      </div>
+      <div class="input-section" id="object3">
+        <div class="bg-2">
+          <div class="input-group">
+            <label for="torso3">Torso: </label> 
+            <input id="torso3" name="torso3" type="range" min="-180" max="180" step="10" value="90"/>
+            <p id="torso3-value">90</p>
+          </div>
+          <div class="input-group">
+              <label for="globalRotation">Global Rotation: </label>
+              <input id="globalRotation" name="globalRotation" type="range" min="-180" max="180" step="10" value="-90"/>
+              <p id="globalRotation-value">-90</p>
+            </div>
+          <div class="input-group">
+              <label for="posx">Position X: </label>
+              <input id="posx" name="posx" type="range"  min="-150" max="800" step="50" value="400"/>
+              <p id="posx-value">400</p>
+          </div>
+          <div class="input-group">
+              <label for="posy">Position Y: </label>
+              <input id="posy" name="posy" type="range" min="150" max="700" step="50" value="400"/>
+              <p id="posy-value">400</p>
+          </div>
+          <div class="input-group">
+              <label for="headLtoR">Head Left to Right: </label>
+              <input id="headLtoR" name="headLtoR" type="range" min="-90" max="90" step="10" value="0"/>
+              <p id="headLtoR-value">0</p>
+          </div>
+          <div class="input-group">
+              <label for="headUtoD">Head Up to Down: </label>
+              <input id="headUtoD" name="headUtoD" type="range" min="-40" max="160" step="10" value="0"/>
+              <p id="headUtoD-value">0</p>
+          </div>
+          <div class="input-group">
+              <label for="neck">Neck: </label>
+              <input id="neck" name="neck" type="range" min="60" max="160" step="10" value="70"/>
+              <p id="neck-value">70</p>
+          </div>
+          <div class="input-group">
+              <label for="frontLfoot">Front Left Foot: </label>
+              <input id="frontLfoot" name="frontLfoot" type="range" min="-10" max="170" step="10" value="70"/>
+              <p id="frontLfoot-value">70</p>
+          </div>
+          <div class="input-group">
+              <label for="frontLleg">Front Left Leg: </label>
+              <input id="frontLleg" name="frontLleg" type="range" min="0" max="180" step="10" value="10"/>
+              <p id="frontLleg-value">10</p>
+          </div>
+          <div class="input-group">
+              <label for="frontRleg">Front Right Leg: </label>
+              <input id="frontRleg" name="frontRleg" type="range" min="-10" max="170" step="10" value="80"/>
+              <p id="frontRleg-value">80</p>
+          </div>
+          <div class="input-group">
+              <label for="frontRfoot">Front Right Foot: </label>
+              <input id="frontRfoot" name="frontRfoot" type="range" min="0" max="170" step="10" value="10"/>
+              <p id="frontRfoot-value">10</p>
+          </div>
+          <div class="input-group">
+              <label for="backLleg">Back Left Leg: </label>
+              <input id="backLleg" name="backLleg" type="range" min="-10" max="180" step="10" value="90"/>
+              <p id="backLleg-value">90</p>
+          </div>
+          <div class="input-group">
+              <label for="backLfoot">Back Left Foot: </label>
+              <input id="backLfoot" name="backLfoot" type="range" min="0" max="180" step="10" value="40"/>
+              <p id="backLfoot-value">40</p>
+          </div>
+          <div class="input-group">
+              <label for="backRleg">Back Right Leg: </label>
+              <input id="backRleg" name="backRleg" type="range" min="-10" max="180" step="10" value="70"/>
+              <p id="backRleg-value">70</p>
+          </div>
+          <div class="input-group">
+              <label for="backRfoot">Back Right Foot: </label>
+              <input id="backRfoot" name="backRfoot" type="range" min="0" max="180" step="10" value="30"/>
+              <p id="backRfoot-value">30</p>
+          </div>
+        </div>
+      </div>
+      <div class="input-section" id="shadings">
+        <div class="bg-1">
+          <div class="input-group">
+            <label for="withShading">Shading: </label>
+            <input type="checkbox" id="withShading" name="withShading" checked="true">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  function displayDiv(element) {
+    document.getElementById("object1").style.display = element.value == "object1" ? "block" : "none";
+    document.getElementById("object2").style.display = element.value == "object2" ? "block" : "none";
+    document.getElementById("object3").style.display = element.value == "object3" ? "block" : "none";
+  }
+</script>
+</html>
