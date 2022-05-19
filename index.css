@@ -101,12 +101,13 @@ svg {
     margin-left: -10px;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
+
 }
 
 .chartContainer {
   /* position: relative; */
   padding-top: 60px;
-  margin: auto;
+  /* margin: auto; */
   margin-top: 0;
   height: 480px;
   width: 540px;

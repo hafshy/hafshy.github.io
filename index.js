@@ -8,7 +8,9 @@ function selectAll() {
 
 function deselectAll() {
   for(let i = 1; i <= 13; i++) {
-    mouseOutRoute(event, ("route_").concat(i))
+    var routePath = document.getElementById(("route_").concat(i))
+    routePath.style.opacity = "30%"
+    description[0].classList.remove("active")
   }
 }
 
@@ -16,6 +18,8 @@ function clickButton(id) {
     var btn = document.getElementById(id)
     var current = document.getElementsByClassName("btn-active")
     var currentId = parseInt(current[0].id.slice(7))
+    current[0].className = current[0].className.replace(" btn-active", "")
+    btn.classList.add("btn-active")
     if(id == "koridor0") {
         selectAll()
         loadChart()
@@ -25,17 +29,13 @@ function clickButton(id) {
           deselectAll()
         }
         else {
-            console.log(currentId)
             mouseOutRoute(event, ("route_").concat(currentId))
-            console.log(("route_").concat(currentId))
 
         }
         mouseOverRoute(("route_").concat(id.slice(7)))
         loadChart([parseInt(id.substring(7,id.length))])
     }
 
-    current[0].className = current[0].className.replace(" btn-active", "")
-    btn.classList.add("btn-active")
 }
 
 function clickRoute(id) {
@@ -62,7 +62,7 @@ function mouseOverRoute(id) {
         var penumpang = data["penumpang"]
         var pendapatan = data["pendapatan"]
         description[0].innerHTML = 
-        '<span style="font-weight:bold;font-size: 12px;">' + name + '</span>' + "<br><br>"
+        '<span style="font-weight:bold;font-size: 12px;">' + 'Koridor ' + routeId + ': '+ name + '</span>' + "<br><br>"
         + "Penumpang <br>"
         + '<span style="color:green; text-align:left"> 2019: ' + numberWithDot(penumpang[2019]) + ' orang</span>' + "<br>"
         + '<span style="color:red; text-align:left"> 2020: ' + numberWithDot(penumpang[2020]) + ' orang</span>' + "<br>"
@@ -79,12 +79,10 @@ function mouseOutRoute(e, id) {
     var routeId = parseInt(id.slice(6))
     var activeBtn = document.getElementsByClassName("btn-active")
     var activeBtnId = parseInt(activeBtn[0].id.slice(7))
-    console.log(!(routeId === activeBtnId))
     if (!(routeId === activeBtnId)) {
       routePath.style.opacity = "30%"
       description[0].classList.remove("active")
     }
-    routePath.style.opacity = "30%"
 }
 
 function loadJSON(callback) {   
