@@ -4,6 +4,10 @@
   margin: 0;
 }
 
+body {
+    background-color: #eef5f9;
+}
+
 .content {
   display: flex;
   justify-content: space-between;
@@ -33,6 +37,12 @@
   opacity: 100%;
 }
 
+h1 {
+    text-align: center;
+    padding: 12px;
+    font-family: 'Roboto', sans-serif;
+}
+
 h3 {
   font-family: 'Roboto', sans-serif;
   text-align: center;
@@ -40,7 +50,7 @@ h3 {
 }
 
 svg {
-    width: 70vw;
+    width: 60vw;
     max-width: 100%!important;
     height: auto;
     display: block;
@@ -96,7 +106,9 @@ svg {
 
 .chartContainer {
   /* position: relative; */
+  padding-top: 60px;
   margin: auto;
-  height: 400px;
-  width: 400px;
+  margin-top: 0;
+  height: 480px;
+  width: 540px;
 }
