@@ -1,26 +1,34 @@
 var description = document.getElementsByClassName("description")
-// console.log(jsonData)
 
-function clickButton(id = "koridor0") {
+function selectAll() {
+  for(let i = 1; i <= 13; i++) {
+    mouseOverRoute(("route_").concat(i))
+  }
+}
+
+function deselectAll() {
+  for(let i = 1; i <= 13; i++) {
+    mouseOutRoute(event, ("route_").concat(i))
+  }
+}
+
+function clickButton(id) {
     var btn = document.getElementById(id)
     var current = document.getElementsByClassName("btn-active")
     var currentId = parseInt(current[0].id.slice(7))
-    console.log(id)
-    console.log(currentId)
     if(id == "koridor0") {
-        for(let i = 1; i <= 13; i++) {
-            console.log(("route_").concat(i))
-            mouseOverRoute(("route_").concat(i))
-        }
-        console.log("all")
+        selectAll()
         loadChart()
     }
     else {
-        if(!(currentId == 0)) {mouseOutRoute(event, ("route_").concat(currentId))}
+        if(currentId == 0) {
+          deselectAll()
+        }
         else {
-            for(let i = 1; i <= 13; i++) {
-                mouseOutRoute(event, ("route_").concat(i))
-            }
+            console.log(currentId)
+            mouseOutRoute(event, ("route_").concat(currentId))
+            console.log(("route_").concat(currentId))
+
         }
         mouseOverRoute(("route_").concat(id.slice(7)))
         loadChart([parseInt(id.substring(7,id.length))])
@@ -31,7 +39,7 @@ function clickButton(id = "koridor0") {
 }
 
 function clickRoute(id) {
-    console.log("TEST")
+    clickButton("koridor" + id.slice(6))
 }
 
 function mouseMoveRoute(e) {
@@ -39,7 +47,6 @@ function mouseMoveRoute(e) {
     var y = e.clientY - 160
     description[0].style.top = y + "px"
     description[0].style.left = x + "px"
-    console.log(x, y)
 }
 
 function mouseOverRoute(id) {
@@ -54,8 +61,6 @@ function mouseOverRoute(id) {
         var name = data["name"]
         var penumpang = data["penumpang"]
         var pendapatan = data["pendapatan"]
-        console.log(routeId)
-        console.log(data["name"])
         description[0].innerHTML = 
         '<span style="font-weight:bold;font-size: 12px;">' + name + '</span>' + "<br><br>"
         + "Penumpang <br>"
@@ -71,8 +76,15 @@ function mouseOverRoute(id) {
 
 function mouseOutRoute(e, id) {
     var routePath = document.getElementById(id)
+    var routeId = parseInt(id.slice(6))
+    var activeBtn = document.getElementsByClassName("btn-active")
+    var activeBtnId = parseInt(activeBtn[0].id.slice(7))
+    console.log(!(routeId === activeBtnId))
+    if (!(routeId === activeBtnId)) {
+      routePath.style.opacity = "30%"
+      description[0].classList.remove("active")
+    }
     routePath.style.opacity = "30%"
-    description[0].classList.remove("active")
 }
 
 function loadJSON(callback) {   
@@ -93,113 +105,9 @@ function loadJSON(callback) {
     loadJSON(function(response) {
      // Parse JSON string into object
        var actual_JSON = JSON.parse(response);
-       console.log(actual_JSON);
     });
    }
 
 function numberWithDot(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-function loadChart(koridor = []) {
-  var chart1 = null
-  var chart2 = null
-  $.getJSON('data.json', function(data) {
-    const n = [null];
-    const result = (koridor.length == 0) ? data : data.filter(element => koridor.includes(element['id']));
-    var p19 = n.concat(result.map(el => el['penumpang']['2019']));
-    var p20 = n.concat(result.map(el => el['penumpang']['2020']));
-    var d19 = n.concat(result.map(el => el['pendapatan']['2019']));
-    var d20 = n.concat(result.map(el => el['pendapatan']['2020']));
-    var kor = result.map(el => el['id']);
-
-    var labels = [null];
-    kor.forEach(element => {
-      labels.push("Koridor " + element.toString());
-    });
-    labels.push(null);
-
-    const data1 = {
-      labels: labels,
-      datasets: [
-        {
-          label: '2019',
-          data: p19,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        },
-        {
-          label: '2020',
-          data: p20,
-          fill: false,
-          borderColor: 'rgb(22, 22, 22)',
-          tension: 0.1
-        },
-      ]
-    };
-
-    const data2 = {
-      labels: labels,
-      datasets: [
-        {
-          label: '2019',
-          data: d19,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        },
-        {
-          label: '2020',
-          data: d20,
-          fill: false,
-          borderColor: 'rgb(22, 22, 22)',
-          tension: 0.1
-        },
-      ]
-    };
-  
-    const config1 = {
-      type: 'line',
-      data: data1,
-      options: {
-        // responsive: true,
-        // maintainAspectRatio: false,
-        // scales: {
-        //     xAxes: [{}],
-        //     yAxes: [{
-        //         ticks: {
-        //             callback: function(value) {
-        //                 return value.replace(",000,000", "jt")
-        //             }
-        //         }
-        //     }]
-        // }
-      }
-    };
-  
-    const config2 = {
-      type: 'line',
-      data: data2,
-      options: {
-        // responsive: true,
-        // maintainAspectRatio: false
-      }
-    };
-
-    $("canvas#chart1").remove();
-    $("canvas#chart2").remove();
-    $("div.chartsContainer").append('<canvas id="chart1"></canvas>');
-    $("div.chartsContainer").append('<canvas id="chart2"></canvas>');
-
-    const chart1 = new Chart(
-      document.getElementById('chart1'),
-      config1
-    );
-
-    const chart2 = new Chart(
-      document.getElementById('chart2'),
-      config2
-    );
-  });
 }
