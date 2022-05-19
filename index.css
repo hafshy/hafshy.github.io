@@ -107,7 +107,7 @@ svg {
 .chartContainer {
   /* position: relative; */
   padding-top: 60px;
-  margin: auto;
+  /* margin: auto; */
   margin-top: 0;
   height: 480px;
   width: 540px;
